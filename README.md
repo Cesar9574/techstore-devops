@@ -1,56 +1,88 @@
-# TechStore DevOps - Proyecto Inicial
+# TechStore DevOps - Proyecto Transformado
 
 ## Contexto
-
-TechStore GT posee una aplicación pequeña que necesita ser modernizada utilizando prácticas DevOps.
-
-El proyecto contiene intencionalmente algunos problemas que deberán ser identificados y corregidos durante la práctica.
+TechStore GT poseia una aplicacion pequena desarrollada rapidamente, sin control de
+versiones formal, con contrasenas expuestas en el codigo, sin revisiones de codigo
+ni integracion continua. Este repositorio documenta la transformacion DevOps aplicada
+al proyecto.
 
 ## Requisitos
-
 - Node.js 20 o superior
 - Git
 - Cuenta de GitHub
-- Acceso a Azure DevOps
-- Visual Studio Code, IntelliJ IDEA u otro editor
 
-## Instalación
+## Instalacion
 
+1. Clonar el repositorio:
+```bash
+git clone https://github.com/Cesar9574/techstore-devops.git
+cd techstore-devops
+```
+
+2. Instalar dependencias:
 ```bash
 npm install
 ```
 
-## Ejecutar aplicación
+3. Configurar variables de entorno: copiar .env.example a .env y completar los
+valores reales (nunca se sube .env a Git, esta protegido en .gitignore):
+```bash
+cp .env.example .env
+```
 
+## Ejecutar aplicacion
 ```bash
 npm start
 ```
 
 ## Ejecutar pruebas
-
 ```bash
 npm test
 ```
 
-## Estructura
-
+## Estructura del proyecto
 ```text
 techstore-devops/
-├── config/
-│   └── config.js
-├── docs/
-├── src/
-│   ├── app.js
-│   └── demo.js
-├── tests/
-│   └── app.test.js
-├── .gitignore
-├── package.json
-└── README.md
+|-- .github/
+|   `-- workflows/
+|       `-- ci.yml          # Pipeline de integracion continua
+|-- config/
+|   `-- config.js           # Configuracion via variables de entorno
+|-- docs/
+|   `-- NOTAS_PROYECTO.txt
+|-- src/
+|   |-- app.js               # Logica de negocio (calculo de totales y descuentos)
+|   `-- demo.js               # Script de demostracion
+|-- tests/
+|   `-- app.test.js
+|-- .env.example              # Plantilla de variables de entorno (sin valores reales)
+|-- .gitignore
+|-- package.json
+`-- README.md
 ```
 
-## Importante
+## Flujo de ramas (Git Flow simplificado)
+- main: codigo estable, protegido, solo recibe cambios via Pull Request aprobado.
+- develop: rama de integracion donde se combinan los cambios antes de pasar a main.
+- feature/*: ramas individuales para cada nueva funcionalidad, creadas desde develop.
 
-No modifique el proyecto antes de iniciar la práctica.
+## Flujo de contribucion
+1. Crear una rama desde develop: git checkout -b feature/nombre-funcionalidad
+2. Hacer cambios y commitear: git add . && git commit -m "descripcion"
+3. Subir la rama: git push origin feature/nombre-funcionalidad
+4. Abrir un Pull Request hacia develop en GitHub
+5. Tras revision y aprobacion, se fusiona a develop
+6. Periodicamente, se abre un Pull Request de develop hacia main
 
-Durante la actividad deberá analizar su estructura, identificar problemas y aplicar las prácticas DevOps indicadas por el docente.
+## Integracion continua
+Cada push o Pull Request hacia main o develop ejecuta automaticamente un pipeline
+de GitHub Actions (.github/workflows/ci.yml) que instala dependencias y corre las
+pruebas automatizadas con Jest.
+
+## Gestion de pendientes
+Los TODOs identificados en el codigo original fueron migrados a Issues formales de
+GitHub para su seguimiento (ver pestana Issues del repositorio).
+
+## Seguridad
+Las credenciales de base de datos ya no estan escritas en el codigo. Se manejan mediante
+variables de entorno (.env, ignorado por Git) y una plantilla publica (.env.example).
